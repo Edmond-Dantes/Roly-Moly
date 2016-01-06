@@ -44,9 +44,9 @@ enum keys{
 var isKeyPressed:[keys:Bool] = [keys.left: false, .right: false, .up: false, .down: false]
 
 
-var myEmitterNode:SKEmitterNode? = nil
+//var myEmitterNode:SKEmitterNode? = nil
 
-var myGravityFieldNode = SKFieldNode()
+//var myGravityFieldNode = SKFieldNode()
 
 
 var LEVEL:Int = 1
@@ -98,6 +98,10 @@ private let CONSTANT_WALLSPEED:CGFloat = 1000 * SPEED_PERCENTAGE
 
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
+    
+    var myGravityFieldNode = SKFieldNode()
+    var myEmitterNode:SKEmitterNode? = nil
+    
     //private let CONSTANT_WALLSPEED = 1000
     private var level:Int = 1
     //private var levelExitsArray:[SmashBlock.blockPosition] = SmashBlock.levelExitArray(1)//self.level)
@@ -110,10 +114,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private let smashingColor: SKColor = SKColor.redColor()
     private let cornerColor: SKColor = SKColor.blueColor()
     
-    private var hasWorldMovement:Bool = true
+    private var hasWorldMovement:Bool = true//false//true
     private var isFirstRound: Bool = true //*****don't change value
     private var isFirstRoundStarted: Bool = false //*****don't change value
-    private var isEdgeHitDeathOn: Bool = false//true //false
+    private var isEdgeHitDeathOn: Bool = true //false
     private var playerScore:Int = 0
     private var isPlayerTouched: Bool = false //*****don't change value
     //private var isTouchingActiveWall: Bool = true
@@ -271,7 +275,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 world.addChild(myPresentationSmashBlocks[position]!)
             }
             self.activeSmashBlock = arrayOfBlocks[blockArrayCounter]
-            println( "\(self.activeSmashBlock!.rawValue)")
+            print( "\(self.activeSmashBlock!.rawValue)")
             
             mySmashBlocks[self.activeSmashBlock!]?.color = self.smashingColor
             
@@ -288,28 +292,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 //world.addChild(myPresentationPlayer!)
             }
             myPlayer?.hidden = true
-            
-            //-------------------
-            // Load Gravity
-            self.physicsWorld.gravity = CGVector(dx: 0*9.8, dy: 0*9.8)
-            
-            let gravityField = SKFieldNode.radialGravityField()
-            gravityField.position = CGPoint(x: gameFrame.width/2, y: gameFrame.height/2)
-            gravityField.strength = 9.8 * Float(SPEED_PERCENTAGE)
-            gravityField.falloff = 0
-            //gravityField.minimumRadius = 30
-            gravityField.categoryBitMask = CollisionType.player.rawValue
-            myGravityFieldNode = gravityField
-            self.addChild(gravityField)
-            /*
-            let gravityField2 = SKFieldNode.radialGravityField()
-            gravityField2.position = CGPoint(x: gameFrame.width/2, y: gameFrame.height/2)
-            gravityField2.falloff = -2        //gravityField2.exclusive = true
-            gravityField2.minimumRadius = 1
-            gravityField2.strength = 100000.8
-            //gravityField2.region = SKRegion(radius: 5)
-            self.addChild(gravityField2)
-            */
             
             
             
@@ -359,21 +341,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             myJoyStick = joyStick
             */
             
+            //-------------------
+            // Load Gravity
+            self.physicsWorld.gravity = CGVector(dx: 0*9.8, dy: 0*9.8)
+            
+            let gravityField = SKFieldNode.radialGravityField()// radialGravityField()
+            gravityField.position = CGPoint(x: gameFrame.width/2, y: gameFrame.height/2)
+            gravityField.strength = 9.8 * Float(SPEED_PERCENTAGE)
+            gravityField.falloff = 0
+            //gravityField.minimumRadius = 30
+            gravityField.categoryBitMask = CollisionType.player.rawValue
+            myGravityFieldNode = gravityField
+            self.addChild(myGravityFieldNode)
+            //world.addChild(myGravityFieldNode)
+            
             
             //Load Particle Emmitter
-            let burstPath = NSBundle.mainBundle().pathForResource("MyParticle",
-                ofType: "sks")
+            let burstPath = NSBundle.mainBundle().pathForResource("MyParticle", ofType: "sks")
             
-            let burstNode = NSKeyedUnarchiver.unarchiveObjectWithFile(burstPath!)
-                as! SKEmitterNode
+            let burstNode = NSKeyedUnarchiver.unarchiveObjectWithFile(burstPath!) as! SKEmitterNode
             
             myEmitterNode = burstNode
             
             if let burst = myEmitterNode{
-                self.addChild(burst)
-                burst.position = CGPoint(x: 100, y: 100)
+                //self.addChild(burst)
+                world.addChild(burst)
+                burst.position = CGPoint(x: 0, y: 0)
                 burst.fieldBitMask = CollisionType.player.rawValue
                 burst.advanceSimulationTime(2)
+                burst.targetNode = self//.world
             }
             
             //my Maze
@@ -385,7 +381,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             world.name = "world"
             self.addChild(world)
             for node in self.children {
-                let child = node as! SKNode
+                let child = node 
                 if child.name != "world"{
                     child.hidden = true
                 }
@@ -580,7 +576,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //player.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
             if controller.joyStickDirection != .neutral{
                 player.physicsBody!.applyForce(CGVector(dx: speed * unitX / c, dy: speed * unitY / c))
-                println(" force =  \(speed * unitX / c), \(speed * unitY / c)")
+                print(" force =  \(speed * unitX / c), \(speed * unitY / c)")
             }
             
         }
@@ -751,7 +747,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case 126://up
             if controller.joyStickDirection != .up && !isKeyPressed[.up]!{
                 controller.joyStickDirection = .up
-                println("\(key) up")
+                print("\(key) up")
                 controller.isChangedDirection = true
                 isKeyPressed[.up] = true
             }
@@ -764,21 +760,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case 124://right
             if controller.joyStickDirection != .right && !isKeyPressed[.right]!{
                 controller.joyStickDirection = .right
-                println("\(key) right")
+                print("\(key) right")
                 controller.isChangedDirection = true
                 isKeyPressed[.right] = true
             }
         case 125://down
             if controller.joyStickDirection != .down && !isKeyPressed[.down]!{
                 controller.joyStickDirection = .down
-                println("\(key) down")
+                print("\(key) down")
                 controller.isChangedDirection = true
                 isKeyPressed[.down] = true
             }
         case 123://left
             if controller.joyStickDirection != .left && !isKeyPressed[.left]!{
                 controller.joyStickDirection = .left
-                println("\(key) left")
+                print("\(key) left")
                 controller.isChangedDirection = true
                 isKeyPressed[.left] = true
             }
@@ -856,7 +852,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //if
         
         
-        println(message)
+        print(message)
+        
         
         if let player = myPlayer{
             
@@ -868,7 +865,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             player.removeFromParent()
             myPresentationPlayer?.removeFromParent()
             //myRestartLabel.backgroundColor = UIColor.clearColor()
-            
+            print("6 gravity: \(myGravityFieldNode.position), world: \(self.world.position)")
             
             //self.paused = true
             //self.runAction(SKAction.speedTo(0.5, duration: 1))
@@ -919,7 +916,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             //println("should work vel = \(mySmashBlocks[self.activeSmashBlock!]!.physicsBody!.velocity.dx), \(mySmashBlocks[self.activeSmashBlock!]!.physicsBody!.velocity.dy)   \(self.activeSmashBlock!.rawValue)")
             
-            println("\(player.cornerHitPosition!.x), \(player.cornerHitPosition!.y)")
+            print("\(player.cornerHitPosition!.x), \(player.cornerHitPosition!.y)")
             
             let unitY:CGFloat = 0.5
             let unitX:CGFloat = 0.5
@@ -935,7 +932,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     sign = -sign
                     
                     speed(CGVector(dx: sign * smashSpeed * unitX / r, dy: -smashSpeed * unitY / r))
-                    println("corner impulse")
+                    print("corner impulse")
                     died = true
                 }
             case .leftBottom:
@@ -946,7 +943,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     sign = -sign
                     
                     speed(CGVector(dx: sign * smashSpeed * unitX / r, dy: smashSpeed * unitY / r))
-                    println("corner impulse")
+                    print("corner impulse")
                     died = true
                 }
             case .rightTop:
@@ -956,7 +953,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     //let unitX = r - unitY.abs()
                     
                     speed(CGVector(dx: sign * smashSpeed * unitX / r, dy: -smashSpeed * unitY / r))
-                    println("corner impulse")
+                    print("corner impulse")
                     died = true
                 }
             case .rightBottom:
@@ -967,7 +964,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                     
                     speed(CGVector(dx: sign * smashSpeed * unitX / r, dy: smashSpeed * unitY / r))
-                    println("corner impulse")
+                    print("corner impulse")
                     died = true
                 }
             case .topLeft:
@@ -977,7 +974,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     //let unitY = r - unitX.abs()
                     
                     speed(CGVector(dx: smashSpeed * unitX / r, dy: sign * smashSpeed * unitY / r))
-                    println("corner impulse")
+                    print("corner impulse")
                     died = true
                 }
             case .topRight:
@@ -987,7 +984,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     //let unitY = r - unitX.abs()
                     
                     speed(CGVector(dx: -smashSpeed * unitX / r, dy: sign * smashSpeed * unitY / r))
-                    println("corner impulse")
+                    print("corner impulse")
                     died = true
                 }
             case .bottomLeft:
@@ -999,7 +996,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     sign = -sign
                     
                     speed(CGVector(dx: smashSpeed * unitX / r, dy: sign * smashSpeed * unitY / r))
-                    println("corner impulse")
+                    print("corner impulse")
                     died = true
                 }
             case .bottomRight:
@@ -1011,7 +1008,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     sign = -sign
                     
                     speed(CGVector(dx: -smashSpeed * unitX / r, dy: sign * smashSpeed * unitY / r))
-                    println("corner impulse")
+                    print("corner impulse")
                     died = true
                 }
                 
@@ -1071,40 +1068,57 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             
             //return
-            
+            self.smashBlockEdgeHit(player)
             if player.isDying{
                 
                 if let burst = myEmitterNode{
-                    if player.deathPosition.x < cornerBlockFrame.width {//+ player.radius {
-                        player.deathPosition.x = cornerBlockFrame.width //+ player.radius
+                    if player.deathPosition.x < cornerBlockFrame.width + player.radius {
+                        player.deathPosition.x = cornerBlockFrame.width + player.radius
                     }
-                    else if player.deathPosition.x > gameFrame.width - cornerBlockFrame.width {// - player.radius{
-                        player.deathPosition.x = gameFrame.width - cornerBlockFrame.width //- player.radius
-                    }
-                    
-                    if player.deathPosition.y < cornerBlockFrame.height {//+ player.radius{
-                        player.deathPosition.y = cornerBlockFrame.height //+ player.radius
-                    }
-                    else if player.deathPosition.y > gameFrame.height - cornerBlockFrame.height {//- player.radius{
-                        player.deathPosition.y = gameFrame.height - cornerBlockFrame.height //- player.radius
+                    else if player.deathPosition.x > gameFrame.width - cornerBlockFrame.width - player.radius{
+                        player.deathPosition.x = gameFrame.width - cornerBlockFrame.width - player.radius
                     }
                     
+                    if player.deathPosition.y < cornerBlockFrame.height + player.radius{
+                        player.deathPosition.y = cornerBlockFrame.height + player.radius
+                    }
+                    else if player.deathPosition.y > gameFrame.height - cornerBlockFrame.height - player.radius{
+                        player.deathPosition.y = gameFrame.height - cornerBlockFrame.height - player.radius
+                    }
+                    
+                    self.updateWorldMovement()
                     if player.justDied{
                         burst.position = player.deathPosition
-                        //burst.position = player.position
+                        print("2 death: \(player.deathPosition)")
+                       // let centerPoint = CGPoint(x: gameFrame.width/2, y: gameFrame.height/2)
+                       // myGravityFieldNode.position = self.convertPoint(myGravityFieldNode.position, toNode: self.world)
                         
+                        myGravityFieldNode.position = self.convertPoint(myGravityFieldNode.position, fromNode: self.world)
+                        //burst.position = self.convertPoint(burst.position, fromNode: self.world)
+                        
+                        print("1 gravity: \(myGravityFieldNode.position), world: \(self.world.position)")
+                        /*
                         if hasWorldMovement{
-                            let playPos = player.deathPosition
+                            var playPos = myPresentationPlayer!.position
+                            if !myPlayer!.isAlive{
+                                playPos = myPlayer!.deathPosition
+                            }
+                            //var playPos = myPresentationPlayer!.position
                             let centerPoint = CGPoint(x: gameFrame.width/2, y: gameFrame.height/2)
                             let differenceVector = CGPoint(x: centerPoint.x - playPos.x, y: centerPoint.y - playPos.y)
                             
-                            //myGravityFieldNode.position = CGPoint(x: differenceVector.x, y: differenceVector.y)
-                            //burst.position = centerPoint
                             
-                            myGravityFieldNode.position = self.convertPoint(myGravityFieldNode.position, fromNode: self.world)
-                            burst.position = self.convertPoint(burst.position, fromNode: self.world)
+                            
+                            
+ //                           burst.position = self.convertPoint(burst.position, fromNode: self.world)
+ 
+                            
+                        }else{
+                       
                             
                         }
+                        */
+                        
                         burst.resetSimulation()
                         player.justDied = false
                     }
@@ -1113,7 +1127,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
             }
             
-            self.smashBlockEdgeHit(player)
+            //self.smashBlockEdgeHit(player)
             
             
         }
@@ -1164,37 +1178,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let centerPoint = CGPoint(x: gameFrame.width/2, y: gameFrame.height/2)
         let differenceVector = CGPoint(x: centerPoint.x - playPos.x, y: centerPoint.y - playPos.y)
         
-        
-        
-        world.position = CGPoint(x: differenceVector.x, y: differenceVector.y)
-        
-        //myPresentationPlayer!.position = centerPoint
-        /*
-        //for-in loop to add the corners to the scene
-        for (position ,corner) in myCorners {
-        //self.addChild(corner)
-        let mPC = myPresentationCorners[position]!.position
-        myPresentationCorners[position]!.position = CGPoint(x: mPC.x + differenceVector.x, y: mPC.y + differenceVector.y)
-        }
-        
-        
-        //---------------------
-        //smashing block objects
-        
-        
-        //Dictionary to hold the SMASH block objects
-        let smashBlockArray = SmashBlock.array
-        for bPosition in smashBlockArray{
-        //mySmashBlocks[bPosition] =  SmashBlock(blockPos: bPosition)
-        let mPSB = myPresentationSmashBlocks[bPosition]!.position
-        myPresentationSmashBlocks[bPosition]?.position = CGPoint(x: mPSB.x + differenceVector.x, y: mPSB.y + differenceVector.y)
-        myPresentationSmashBlocks[bPosition]?.color = mySmashBlocks[bPosition]!.color
-        }
-        
-        
-        */
-        
-        
+        self.world.position = CGPoint(x: differenceVector.x, y: differenceVector.y)
     }
     
     
@@ -1245,6 +1229,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                     myRestartLabel.text = "\(playerScore)"
                     
+                    
                     /*
                     let region = SKRegion(radius: 5)
                     if region.containsPoint(player.position){
@@ -1282,7 +1267,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     if player.isDying{
                         // myRestartLabel.backgroundColor = UIColor.clearColor()
                         
-                        
+
                         
                         //????
                     }
@@ -1290,6 +1275,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         myRestartLabel.text = "RESTART"
                         playerScore = 0
                         myGravityFieldNode.strength = 9.8 * Float(SPEED_PERCENTAGE)
+                       // myGravityFieldNode.position = CGPoint(x: gameFrame.width/2, y: gameFrame.height/2)
                     }
                     
                     
@@ -1337,7 +1323,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         
                         
                         
-                        println( "hitCount = \(myPlayer!.hitCount) from \(self.activeSmashBlock!.rawValue) active wall at \(myPlayer!.position.x), \(myPlayer!.position.y)")
+                        print( "hitCount = \(myPlayer!.hitCount) from \(self.activeSmashBlock!.rawValue) active wall at \(myPlayer!.position.x), \(myPlayer!.position.y)")
                         let playerVelocity = sqrt( pow(player.velocity.dx, 2) + pow(player.velocity.dy, 2) )
                         
                         //println("active Wall contact - velocity = \(playerVelocity) = \(player.velocity.dx), \(player.velocity.dy)")
@@ -1516,7 +1502,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                                 }
                                 
                             }
-                            println( "hitCount = \(myPlayer!.hitCount) from \(smashPosition.rawValue) static wall")
+                            print( "hitCount = \(myPlayer!.hitCount) from \(smashPosition.rawValue) static wall")
                             
                             
                             
@@ -1571,9 +1557,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         if let player = contact.bodyA.node as? Player {
-            contactLogic(contact.bodyA, contact.bodyB)
+            contactLogic(contact.bodyA, wall: contact.bodyB)
         }else if let player = contact.bodyB.node as? Player {
-            contactLogic(contact.bodyB, contact.bodyA)
+            contactLogic(contact.bodyB, wall: contact.bodyA)
         }
         
         
@@ -1729,7 +1715,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         --myPlayer!.hitCount
                         myPlayer!.contactActive = false
                     }
-                    println( "hitCount = \(myPlayer!.hitCount) release from \(self.activeSmashBlock!.rawValue) active wall")
+                    print( "hitCount = \(myPlayer!.hitCount) release from \(self.activeSmashBlock!.rawValue) active wall")
                 }
                 else{
                     
@@ -1766,7 +1752,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                             
                         }
                         
-                        println( "hitCount = \(myPlayer!.hitCount) \(activeBlock.rawValue) active wall & release from \(smashPosition.rawValue) static wall")
+                        print( "hitCount = \(myPlayer!.hitCount) \(activeBlock.rawValue) active wall & release from \(smashPosition.rawValue) static wall")
                     }
                 }
             }
@@ -1778,12 +1764,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if let player = contact.bodyA.node as? Player {
                 
-                contactLogic(contact.bodyA, contact.bodyB)
+                contactLogic(contact.bodyA, wall: contact.bodyB)
                 
             }
             else if let player = contact.bodyB.node as? Player {
                 
-                contactLogic(contact.bodyB, contact.bodyA)
+                contactLogic(contact.bodyB, wall: contact.bodyA)
             }
         }
         
@@ -1797,10 +1783,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if !hasWorldMovement{
             differenceVector = CGPoint(x: 0, y: 0)
         }
+        
+        //print("5 deathPosition: \(myPlayer!.deathPosition)")
+        
         if self.deathTimer == 0{
-            //updateWorldMovement()
             self.slowDownSceneTime()
             sizeEffectSwitch = true
+            print("5 deathPosition: \(myPlayer!.deathPosition)")
         }
         
         self.deathTimer += deltaTime
@@ -1899,6 +1888,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.gravity = CGVector(dx: 9.8 * unitX / r, dy: 9.8 * unitY / r)
         }
         //  }*/
+        
+        
         
     }
     
@@ -2143,7 +2134,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //wallTimer - private property to pace the time before a SMASH BLOCK is active
         
         func speed(wallSpeed: CGVector){
-            if var trap = self.activeSmashBlock{
+            if let trap = self.activeSmashBlock{
                 let smashBlock = mySmashBlocks[trap]
                 smashBlock?.physicsBody?.velocity = (wallSpeed)
                 
@@ -2153,7 +2144,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if pauseSmashBlockLogic{ // if true blocks pause
             speed(CGVector(dx: 0, dy: 0))
-            if var trap = self.activeSmashBlock{
+            if let trap = self.activeSmashBlock{
                 let smashBlock = mySmashBlocks[trap]
                 //smashBlock?.physicsBody?.position =
                 
@@ -2161,7 +2152,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         
-        if var trap = self.activeSmashBlock{
+        if let trap = self.activeSmashBlock{
             //            println("trap logic")
             
             switch smashBlockStatus{

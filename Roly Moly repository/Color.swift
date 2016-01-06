@@ -58,7 +58,7 @@ class Color: NSColor {
         fatalError("init(coder:) has not been implemented")
     }
 
-    required init!(pasteboardPropertyList propertyList: AnyObject!, ofType type: String!) {
+    required init!(pasteboardPropertyList propertyList: AnyObject, ofType type: String) {
         fatalError("init(pasteboardPropertyList:ofType:) has not been implemented")
     }
     

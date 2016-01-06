@@ -28,7 +28,7 @@ class MazeCell:SKSpriteNode {
     var gridPoint:Int
     var visited:Bool = false
     
-    init(#cellType:positionType, #gridPoint:Int, #cellSize: CGSize){
+    init(cellType:positionType, gridPoint:Int, cellSize: CGSize){
         
         self.cellPosition = cellType
         self.gridPoint = gridPoint

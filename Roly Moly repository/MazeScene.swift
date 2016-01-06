@@ -132,7 +132,7 @@ class MazeScene: SKScene, SKPhysicsContactDelegate {
             switch key{
             case 126://up
 //                controller.joyStickDirection = .up
-                println("\(key) up")
+                print("\(key) up")
                 if !isViewingMap{
                      //*************************
                     let currentStage = myMaze?.escapePath[self.stage * 2]
@@ -146,13 +146,13 @@ class MazeScene: SKScene, SKPhysicsContactDelegate {
                 }
             case 124://right
 //                controller.joyStickDirection = .right
-                println("\(key) right")
+                print("\(key) right")
             case 125://down
 //                controller.joyStickDirection = .down
-                println("\(key) down")
+                print("\(key) down")
             case 123://left
 //                controller.joyStickDirection = .left
-                println("\(key) left")
+                print("\(key) left")
             default:
                 break
             }
@@ -201,7 +201,7 @@ class MazeScene: SKScene, SKPhysicsContactDelegate {
             let currentStage = myMaze?.escapePath[self.stage * 2]
             myMaze?.mazeCellMatrix[currentStage!].runAction(SKAction.fadeOutWithDuration(0.5)){
                 myMaze?.mazeCellMatrix[currentStage!].runAction(SKAction.fadeInWithDuration(0.5)){
-                    isStageBlinking = false
+                    self.isStageBlinking = false
                 }
             }
         }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5E6AA22A1C3CF28300624F14 /* MyParticle2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 5E6AA2291C3CF28300624F14 /* MyParticle2.sks */; };
 		5EEC3F8A1C3A6EB0003BD30A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EEC3F891C3A6EB0003BD30A /* AppDelegate.swift */; };
 		5EEC3F8C1C3A6EB0003BD30A /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EEC3F8B1C3A6EB0003BD30A /* GameScene.swift */; };
 		5EEC3F901C3A6EB0003BD30A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EEC3F8F1C3A6EB0003BD30A /* Images.xcassets */; };
@@ -42,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5E6AA2291C3CF28300624F14 /* MyParticle2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyParticle2.sks; sourceTree = "<group>"; };
 		5EEC3F841C3A6EB0003BD30A /* Roly Moly repository.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Roly Moly repository.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EEC3F881C3A6EB0003BD30A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5EEC3F891C3A6EB0003BD30A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				5EEC3FAE1C3A7096003BD30A /* MazeScene.sks */,
 				5EEC3FAF1C3A7096003BD30A /* MazeScene.swift */,
 				5EEC3FB01C3A7096003BD30A /* MyParticle.sks */,
+				5E6AA2291C3CF28300624F14 /* MyParticle2.sks */,
 				5EEC3FB11C3A7096003BD30A /* MyParticleSystem.scnp */,
 				5EEC3FB21C3A7096003BD30A /* Player.swift */,
 				5EEC3FB31C3A7096003BD30A /* SmashBlock.swift */,
@@ -220,7 +223,9 @@
 		5EEC3F7C1C3A6EB0003BD30A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftMigration = 0720;
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = Future;
 				TargetAttributes = {
 					5EEC3F831C3A6EB0003BD30A = {
@@ -266,6 +271,7 @@
 				5EEC3FC11C3A7096003BD30A /* spark.png in Resources */,
 				5EEC3FBB1C3A7096003BD30A /* MazeScene.sks in Resources */,
 				5EEC3FBE1C3A7096003BD30A /* MyParticleSystem.scnp in Resources */,
+				5E6AA22A1C3CF28300624F14 /* MyParticle2.sks in Resources */,
 				5EEC3FBD1C3A7096003BD30A /* MyParticle.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -348,6 +354,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -414,6 +421,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "Roly Moly repository/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.future.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -425,6 +433,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "Roly Moly repository/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.future.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -444,6 +453,7 @@
 				);
 				INFOPLIST_FILE = "Roly Moly repositoryTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.future.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Roly Moly repository.app/Contents/MacOS/Roly Moly repository";
 			};
@@ -460,6 +470,7 @@
 				);
 				INFOPLIST_FILE = "Roly Moly repositoryTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.future.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Roly Moly repository.app/Contents/MacOS/Roly Moly repository";
 			};
@@ -484,6 +495,7 @@
 				5EEC3FA41C3A6EB0003BD30A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5EEC3FA51C3A6EB0003BD30A /* Build configuration list for PBXNativeTarget "Roly Moly repositoryTests" */ = {
 			isa = XCConfigurationList;
@@ -492,6 +504,7 @@
 				5EEC3FA71C3A6EB0003BD30A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

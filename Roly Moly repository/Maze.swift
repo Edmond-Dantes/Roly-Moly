@@ -14,7 +14,9 @@ extension Array {
     mutating func shuffle() {
         for i in 0..<(count - 1) {
             let j = Int(arc4random_uniform(UInt32(count - i))) + i
-            swap(&self[i], &self[j])
+            if j != i {
+                swap(&self[i], &self[j])
+            }
         }
     }
 }
@@ -65,7 +67,7 @@ class Maze: SKNode {
         
         super.init()
         
-        println("START")
+        print("START")
         self.level = Int(level)
         
         //self.removeAllChildren()
@@ -89,12 +91,12 @@ class Maze: SKNode {
                 
             }
         }
-        println("START")
+        print("START")
         
         
         findAppropiateMaze()
         
-        println("START")
+        print("START")
         //self.mazeNumberMatrix = mySimpleMazeCalculator
         //loadEscapePath()
         loadRealMaze(level)
@@ -161,7 +163,7 @@ class Maze: SKNode {
         var column = 0
         
         
-        do{
+        repeat{
             
             for row = 0; row < MAZE_ROWS; ++row{
                 for column = 0; column < MAZE_COLUMNS; ++column{
@@ -179,13 +181,13 @@ class Maze: SKNode {
             deadEndCount = 0
             self.escapePath = []
             self.currentPath = []
-            println("start randomMazeGrid")
+            print("start randomMazeGrid")
             (column, row) = randomMazeGridPosition()
-            println("start generateMazeRecursion")
+            print("start generateMazeRecursion")
             generateMazeRecursion(column: column, row: row)
             self.mazeNumberMatrix[exitPoint] = 4  //exit point
-            println("finish generateMazeRecursion")
-            println("path count = \(self.escapePath.count)")
+            print("finish generateMazeRecursion")
+            print("path count = \(self.escapePath.count)")
         }while self.escapePath.count <= (MAZE_ROWS - 3) * 2 + 1// maxPathCount > MAZE_ROWS//self.level + 1//deadEndCount != MAX_DEADENDS
         
         //allow only one path
@@ -255,8 +257,8 @@ class Maze: SKNode {
                 //let cell = myMazeGrid[gridPoint]
                 //var colCalcX = myMazeCellSize.width/2 + CGFloat((column - 1)/2 + 1) * myMazeCellSize.width
                 //var rowCalcY = myMazeCellSize.height/2 + CGFloat((row - 1)/2 + 1) * myMazeCellSize.height
-                var colCalcX = myMazeCellSize.width/2 + CGFloat((column - 1) + 1) * myMazeCellSize.width
-                var rowCalcY = myMazeCellSize.height/2 + CGFloat((row - 1) + 1) * myMazeCellSize.height
+                let colCalcX = myMazeCellSize.width/2 + CGFloat((column - 1) + 1) * myMazeCellSize.width
+                let rowCalcY = myMazeCellSize.height/2 + CGFloat((row - 1) + 1) * myMazeCellSize.height
                 var sizeCalc = myMazeCellSize
                 
                 
@@ -365,7 +367,7 @@ class Maze: SKNode {
             }
         }
         
-        println("MAZE = \(MAZE_COLUMNS) X \(MAZE_ROWS)")
+        print("MAZE = \(MAZE_COLUMNS) X \(MAZE_ROWS)")
     }
     
     func randomMazeGridPosition()->(Int,Int){
@@ -400,7 +402,7 @@ class Maze: SKNode {
         
     }
     
-    func generateMazeRecursion(#column:Int, row:Int){
+    func generateMazeRecursion(column column:Int, row:Int){
         
         /*if deadEndCount > MAX_DEADENDS{
         return

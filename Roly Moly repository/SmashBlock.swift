@@ -284,7 +284,7 @@ class SmashBlock: SKSpriteNode {
             
         }
         
-        println(blockCenter)
+        print(blockCenter)
         
         self.orginalPosition = self.position
         //self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -306,8 +306,8 @@ class SmashBlock: SKSpriteNode {
         
         
         //???
-        slidingJoint = SKPhysicsJointSliding.jointWithBodyA(self.physicsBody,
-            bodyB: myCorners[attachToCornerBlock]?.physicsBody,
+        slidingJoint = SKPhysicsJointSliding.jointWithBodyA(self.physicsBody!,
+            bodyB: (myCorners[attachToCornerBlock]?.physicsBody)!,
             anchor: self.position,
             axis: axis)
     

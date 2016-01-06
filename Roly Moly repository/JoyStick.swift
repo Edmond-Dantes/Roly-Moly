@@ -41,7 +41,7 @@ class JoyStick{
     */
     var joyStickDirection:direction = .neutral
     
-    func loadJoystick(#sceneView: SKView) {
+    func loadJoystick(sceneView sceneView: SKView) {
         //Load view for Joystick play
         //origin: CGPoint(x: sceneView.bounds.width/2 - height/2, y: sceneView.bounds.height - height)
         
@@ -133,11 +133,11 @@ class JoyStick{
         //--------------------------
         //------JoyStick Logic------
         //--------------------------
-        var c = sqrt( pow(location.x - center.x , 2) + pow(location.y - center.y, 2) )
-        var unitX = location.x - center.x
-        var unitY = location.y - center.y
+        let c = sqrt( pow(location.x - center.x , 2) + pow(location.y - center.y, 2) )
+        let unitX = location.x - center.x
+        let unitY = location.y - center.y
         
-        var unitTargetPosition = CGPoint(x: unitX / c, y: unitY / c)
+        let unitTargetPosition = CGPoint(x: unitX / c, y: unitY / c)
         
         //let player = myPlayer!
         
